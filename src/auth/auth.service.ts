@@ -11,7 +11,6 @@ export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
   ) { }
 
   async validateUser(email: string, password: string) {
@@ -33,19 +32,13 @@ export class AuthService {
         // roles: user.roles,
       },
       {
-        // secret: 'dczNQxwmfdlx0mD3fA6hGb5wPj8w9vFthI9Ll6wIrxs=',
-        secret: `P1eprtF5+Dw11f/NKTeP4pN8HTyOZTegWptnf6KUtWgefSyOQ6U3fK/HjbmwdMz2
-Gs7LJ2LEQKHwk9yMJhEqacGU9d33BAf5qMeVEo3uZCgFPMfcLPZ3hQ0tQGFjh1Sh
-rZbbriPxJU8zT4ynlYp8uZB40aciyo4+J9o0IRhPLMH5JkJ5tVPuoIK2jm514GUR
-zYTY0ZWpKhUOLzM8jtQdWNLJnNKLnHcr23dfpdxHtGywJBW7zmiRmOAzcPMweCTR
-E2DIZTx50IT1dori7KE8GH91Pk0onpXcUxyGIe2+ihq3L0VIgEezn1r/FLEE4OGa
-B9Ew8cNIwt5rDlnB167dlw==`,
-        expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRES_IN') || '15m',
+        secret: process.env.JWT_SECRET,
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN || '15m',
       },
     );
 
     // RefreshToken
-    const refreshTokenExpiresInStr = this.configService.get('REFRESH_TOKEN_EXPIRES_IN') || '7d';
+    const refreshTokenExpiresInStr = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
     const refreshTokenExpiresMs = this.parseExpireTimeToMs(refreshTokenExpiresInStr);
 
     const refreshToken = await this.jwtService.signAsync(
@@ -54,7 +47,8 @@ B9Ew8cNIwt5rDlnB167dlw==`,
         jti: tokenId,
       },
       {
-        secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+        // secret: this.configService.get('JWT_SECRET'),
+        secret: process.env.JWT_SECRET,
         expiresIn: refreshTokenExpiresInStr,
       },
     );
