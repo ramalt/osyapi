@@ -4,7 +4,6 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { userResponseDto } from './dto/userResponse.dto';
 import { ReqUser } from 'src/common/decorator/user.decorator';
-import { User } from './entities/user/user';
 
 
 @Controller('user')
